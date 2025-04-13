@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    container_name: housekeeper_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: housekeeperdb
+      POSTGRES_USER: devuser
+      POSTGRES_PASSWORD: devpass
