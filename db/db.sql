@@ -9,7 +9,7 @@ CREATE TABLE users (
 
 -- Tabela de papéis
 CREATE TABLE roles (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY gen_random_uuid(),
     name VARCHAR(40) NOT NULL UNIQUE
 );
 
@@ -21,10 +21,10 @@ CREATE TABLE control_unity (
 
 -- Relacionamento entre usuários e unidade de controle
 CREATE TABLE users_control_unity (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY gen_random_uuid(),
     user_id UUID NOT NULL,
     control_unity_id UUID NOT NULL,
-    role_id INT NOT NULL,
+    role_id UUID NOT NULL,
 
     -- Relacionamentos (FKs)
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -38,7 +38,7 @@ CREATE TABLE users_control_unity (
 -- GERAR A TABELA ROOMS ANTES PARA QUE NAO DE PROBLEMA DE RELACIONAMENTO
 
 CREATE TABLE rooms(
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY gen_random_uuid(),
     name VARCHAR(40),
     control_unity_id UUID NOT NULL,
 
@@ -67,8 +67,8 @@ CREATE TABLE users_rooms(
 
     control_unity_id UUID NOT NULL,
     user_id UUID NOT NULL,
-    room_id INT NOT NULL,
-    role_id INT NOT NULL,
+    room_id UUID NOT NULL,
+    role_id UUID NOT NULL,
 
 
     FOREIGN KEY (control_unity_id) REFERENCES control_unity(id) ON CASCADE DELETE,
@@ -83,8 +83,8 @@ CREATE TABLE users_devices(
     created_at CURRENT_TIMESTAMP,
 
     user_id UUID NOT NULL,
-    device_id INT NOT NULL,
-    role_id INT NOT NULL,
+    device_id UUID NOT NULL,
+    role_id UUID NOT NULL,
 
 
     FOREIGN KEY (control_unity_id) REFERENCES control_unity(id) ON CASCADE DELETE,
@@ -96,7 +96,7 @@ CREATE TABLE users_devices(
 );
 
 CREATE TABLE scenes(
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY gen_random_uuid(),
     control_unity_id NOT NULL,
     user_id UUID NOT NULL,
     name VARCHAR(40) not null,
@@ -104,5 +104,59 @@ CREATE TABLE scenes(
 );
 
 CREATE TABLE users_scenes(
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
+    user_id UUID NOT NULL,
+    scene_id UUID NOT NULL,
+    control_unity_id UUID NOT NULL,
+    role_id UUID NOT NULL,
+
+
+    FOREIGN KEY (control_unity_id) REFERENCES control_unity(id) ON CASCADE DELETE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON CASCADE DELETE,
+    FOREIGN KEY (scene_id) REFERENCES scenes(id) ON CASCADE DELETE,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON CASCADE DELETE
+
+    UNIQUE(user_id, scene_id, control_unity_id)
+);
+
+CREATE TABLE devices_scenes(
+    id UUID PRIMARY KEY gen_random_uuid(),
+    device_id UUID NOT NULL,
+    scene_id UUID NOT NUll
+);
+
+
+CREATE TABLE routines(
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    control_unity_id UUID NOT NULL,
+    triggers_at TIME,
+    created_at TIME,
+    weekly_frequency INT
+);
+
+CREATE TABLE devices_routine(
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    device_id UUID NOT NULL,
+    routine_id UUID NOT NULL,
+    triggers_at TIME,
+    action VARCHAR(40),
+
+
+    FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE CASCADE,
+    FOREIGN KEY (routine_id) REFERENCES routines(id) ON DELETE CASCADE
+);
+
+CREATE TABLE users_routines(
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    routine_id UUID NOT NULL,
+    control_unity_id UUID NOT NULL,
+    role_id UUID NOT NULL
+
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY(routine_id) REFERENCES routines(id) ON DELETE CASCADE,
+    FOREIGN KEY(control_unity_id) REFERENCES control_unity(id) ON DELETE CASCADE,
+    FOREIGN KEY(role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
