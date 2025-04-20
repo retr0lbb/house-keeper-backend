@@ -11,3 +11,15 @@ services:
       POSTGRES_DB: housekeeperdb
       POSTGRES_USER: devuser
       POSTGRES_PASSWORD: devpass
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: housekeeper_pgadmin
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - postgres
