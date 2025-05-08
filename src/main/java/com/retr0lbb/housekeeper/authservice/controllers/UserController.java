@@ -1,7 +1,7 @@
 package com.retr0lbb.housekeeper.authservice.controllers;
 
-import com.retr0lbb.housekeeper.authservice.models.UserModel;
-import com.retr0lbb.housekeeper.authservice.repository.UserRepository;
+import com.retr0lbb.housekeeper.entitys.UserModel;
+import com.retr0lbb.housekeeper.authservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UserModel> createUser(@RequestBody UserModel user){
-        UserModel savedUser = userRepository.save(user);
+        UserModel savedUser = userService.saveUser(user);
         return ResponseEntity.ok(savedUser);
     }
 }

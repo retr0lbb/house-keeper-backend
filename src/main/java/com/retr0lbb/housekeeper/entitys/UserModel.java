@@ -1,15 +1,17 @@
-package com.retr0lbb.housekeeper.authservice.models;
+package com.retr0lbb.housekeeper.entitys;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "tb_users")
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @Column(name = "user_id")
+    private UUID userId;
 
     @Column(unique = true)
     private String userName;
@@ -21,25 +23,34 @@ public class UserModel {
 
     private String fullname;
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tb_users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+
+    )
+    private Set<RolesModel> roles;
+
 
     public UserModel() {
     }
 
     public UserModel(UUID id, String userName, String email, String password, String fullname) {
         super();
-        this.id = id;
+        this.userId = id;
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.fullname = fullname;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getUserId() {
+        return this.userId;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {
