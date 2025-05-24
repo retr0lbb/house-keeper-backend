@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class DeviceServices {
@@ -53,6 +56,15 @@ public class DeviceServices {
             throw new Exception("User doesnot exits");
         }
 
+
+
         this.deviceRepository.deleteById(deviceId);
+    }
+
+    public List<DeviceEntity> findAllDevices(){
+        var devices = this.deviceRepository.findAll();
+
+        return new ArrayList<DeviceEntity>(devices);
+
     }
 }

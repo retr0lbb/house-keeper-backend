@@ -90,6 +90,22 @@ public class UserModel {
         this.fullName = fullname;
     }
 
+    public List<DeviceEntity> getDeviceEntityList() {
+        return deviceEntityList;
+    }
+
+    public void setDeviceEntityList(List<DeviceEntity> deviceEntityList) {
+        this.deviceEntityList = deviceEntityList;
+    }
+
+    public Set<RolesModel> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RolesModel> roles) {
+        this.roles = roles;
+    }
+
     public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(loginRequest.password(), this.password);
     }

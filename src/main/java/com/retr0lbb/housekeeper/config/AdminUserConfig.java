@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Set;
+
 @Configuration
 public class AdminUserConfig implements CommandLineRunner  {
     private RoleRepository roleRepository;
@@ -25,7 +27,12 @@ public class AdminUserConfig implements CommandLineRunner  {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        var adminRole = roleRepository.findByName(RolesModel.Values.ADMIN.name());
+        var adminRole = roleRepository.findById(1L);
+
+        if(adminRole.isEmpty()){
+            throw new IllegalArgumentException("cant pass this");
+        }
+
         var userAdmin = userRepository.findByEmail("admin@gmail.com");
         userAdmin.ifPresentOrElse(
                 user -> {System.out.println("Admin ja existe");},
@@ -34,6 +41,7 @@ public class AdminUserConfig implements CommandLineRunner  {
                     user.setUserName("admin");
                     user.setEmail("admin@gmail.com");
                     user.setPassword(bCryptPasswordEncoder.encode("123"));
+                    user.setRoles(Set.of(adminRole.get()));
                     userRepository.save(user);
                 }
         );

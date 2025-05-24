@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -36,5 +37,12 @@ public class DeviceController {
             throw new RuntimeException(e);
         }
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<DeviceEntity>> getAll(JwtAuthenticationToken token){
+        var list = this.deviceServices.findAllDevices();
+
+        return ResponseEntity.ok(list);
     }
 }

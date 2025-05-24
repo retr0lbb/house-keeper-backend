@@ -2,6 +2,7 @@ package com.retr0lbb.housekeeper.authservice.controllers;
 
 import com.retr0lbb.housekeeper.authservice.dto.LoginRequest;
 import com.retr0lbb.housekeeper.authservice.dto.LoginResponse;
+import com.retr0lbb.housekeeper.entitys.RolesModel;
 import com.retr0lbb.housekeeper.entitys.UserModel;
 import com.retr0lbb.housekeeper.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class TokenController {
@@ -41,11 +43,14 @@ public class TokenController {
 
         var now = Instant.now();
         var expiresIn = 2 * 60 * 60;
+        var scopes = user.get().getRoles().stream().map(RolesModel::getName).collect(Collectors.joining(" "));
+        System.out.println("Esse eh o seu token seu bozo "+ scopes);
 
         var claims = JwtClaimsSet.builder()
                 .issuer("House Keeper Backend 2025")
                 .subject(user.get().getUserId().toString())
                 .expiresAt(now.plusSeconds(expiresIn))
+                .claim("scope", scopes)
                 .issuedAt(now)
                 .build();
 
