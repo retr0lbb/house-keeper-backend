@@ -27,4 +27,14 @@ public class DeviceController {
             throw new RuntimeException(e);
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDevice(@PathVariable UUID id, JwtAuthenticationToken token){
+        try{
+            this.deviceServices.removeDevice(id, UUID.fromString(token.getName()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().build();
+    }
 }
