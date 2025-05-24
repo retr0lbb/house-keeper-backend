@@ -20,10 +20,8 @@ public class UserModel {
 
     @Column(unique = true)
     private String email;
-
     private String password;
-
-    private String fullname;
+    private String fullName;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
@@ -44,7 +42,7 @@ public class UserModel {
         this.userName = userName;
         this.email = email;
         this.password = password;
-        this.fullname = fullname;
+        this.fullName = fullname;
     }
 
     public UUID getUserId() {
@@ -79,12 +77,12 @@ public class UserModel {
         this.password = password;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullname) {
+        this.fullName = fullname;
     }
 
     public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
