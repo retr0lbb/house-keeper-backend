@@ -1,5 +1,6 @@
 package com.retr0lbb.housekeeper.entitys;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.retr0lbb.housekeeper.authservice.dto.LoginRequest;
 import jakarta.persistence.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,7 @@ public class UserModel {
     private String fullName;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<DeviceEntity> deviceEntityList = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
