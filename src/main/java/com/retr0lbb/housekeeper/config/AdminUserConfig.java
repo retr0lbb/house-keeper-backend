@@ -27,7 +27,7 @@ public class AdminUserConfig implements CommandLineRunner  {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        var adminRole = roleRepository.findById(1L);
+        var adminRole = roleRepository.findByName("admin");
 
         if(adminRole.isEmpty()){
             throw new IllegalArgumentException("cant pass this");

@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -33,8 +34,18 @@ public class UserController {
 
     @Transactional
     @PutMapping("/promote/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<UserModel> promoteBasicToAdmin(@PathVariable UUID id, JwtAuthenticationToken token){
-        return  null;
+    @PreAuthorize("hasAuthority('SCOPE_basic')")
+    public ResponseEntity<String> promoteBasicToAdmin(@PathVariable UUID id, JwtAuthenticationToken token){
+        try{
+            this.userService.promoteUser(id);
+            return ResponseEntity.ok("User saved successfully");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping
+    public List<UserModel> getAll(){
+        return this.userService.getAll();
     }
 }

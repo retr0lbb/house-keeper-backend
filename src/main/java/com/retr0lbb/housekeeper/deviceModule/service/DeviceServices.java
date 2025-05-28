@@ -38,6 +38,7 @@ public class DeviceServices {
         newDevice.setDeviceSerial(dto.deviceSerial());
         newDevice.setUser(user.get());
         newDevice.setName(dto.name());
+        newDevice.setAddedAt(LocalDateTime.now());
 
         return deviceRepository.save(newDevice);
     }
@@ -61,8 +62,13 @@ public class DeviceServices {
         this.deviceRepository.deleteById(deviceId);
     }
 
-    public List<DeviceEntity> findAllDevices(){
-        var devices = this.deviceRepository.findAll();
+    public List<DeviceEntity> findAllDevicesByUser(UUID userId) throws Exception {
+        var user = this.userRepository.findById(userId);
+        if(user.isEmpty()){
+            throw new Exception("User is not present");
+        }
+
+        var devices = this.deviceRepository.findByuser(user.get());
 
         return new ArrayList<DeviceEntity>(devices);
 

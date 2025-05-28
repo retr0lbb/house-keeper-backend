@@ -2,6 +2,7 @@ package com.retr0lbb.housekeeper.entitys;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,12 +19,13 @@ public class DeviceEntity {
     private Long deviceSerial;
 
     @Column(name = "added_at")
+    @CreationTimestamp
     private LocalDateTime addedAt;
 
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user_id") // define a FK para o usuário
+    @JoinColumn(name = "user_id", updatable = false) // define a FK para o usuário
     @JsonBackReference
     private UserModel user;
 

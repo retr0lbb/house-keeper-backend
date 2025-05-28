@@ -41,8 +41,11 @@ public class DeviceController {
 
     @GetMapping()
     public ResponseEntity<List<DeviceEntity>> getAll(JwtAuthenticationToken token){
-        var list = this.deviceServices.findAllDevices();
-
-        return ResponseEntity.ok(list);
+        try {
+            var list = this.deviceServices.findAllDevicesByUser(UUID.fromString(token.getName()));
+            return ResponseEntity.ok(list);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
