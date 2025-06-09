@@ -2,13 +2,13 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- Nível de acesso
-CREATE TABLE access_level (
+CREATE TABLE IF NOT EXISTS access_level (
     id SERIAL PRIMARY KEY,
     value INT
 );
 
 -- Usuários
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255),
     email VARCHAR(255) UNIQUE,
@@ -18,7 +18,7 @@ CREATE TABLE users (
 );
 
 -- Cômodos
-CREATE TABLE rooms (
+CREATE TABLE IF NOT EXISTS rooms (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255),
     description TEXT,
@@ -27,7 +27,7 @@ CREATE TABLE rooms (
 );
 
 -- Dispositivos
-CREATE TABLE devices (
+CREATE TABLE IF NOT EXISTS devices (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     device_serial VARCHAR(255) UNIQUE,
     user_id UUID NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE devices (
 );
 
 -- Rotinas
-CREATE TABLE routines (
+CREATE TABLE IF NOT EXISTS routines(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     trigger_type VARCHAR(50),
     is_running BOOLEAN DEFAULT FALSE,
@@ -48,7 +48,7 @@ CREATE TABLE routines (
 );
 
 -- Dispositivos em rotinas
-CREATE TABLE devices_routines (
+CREATE TABLE IF NOT EXISTS devices_routines (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     device_id UUID NOT NULL,
     routine_id UUID NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE devices_routines (
 );
 
 -- Cenas
-CREATE TABLE scenes (
+CREATE TABLE IF NOT EXISTS scenes(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255),
     description TEXT,
@@ -68,7 +68,7 @@ CREATE TABLE scenes (
 );
 
 -- Dispositivos em cenas
-CREATE TABLE devices_scenes (
+CREATE TABLE IF NOT EXISTS devices_scenes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     device_id UUID NOT NULL,
     scene_id UUID NOT NULL,
