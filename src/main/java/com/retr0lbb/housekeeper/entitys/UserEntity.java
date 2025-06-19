@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.UUID;
 
 @Entity
-
+@Table(name = "users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
