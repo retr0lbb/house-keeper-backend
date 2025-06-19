@@ -1,8 +1,8 @@
 package com.retr0lbb.housekeeper.authservice.controllers;
 
 import com.retr0lbb.housekeeper.authservice.dto.CreateUserDTO;
-import com.retr0lbb.housekeeper.entitys.UserModel;
 import com.retr0lbb.housekeeper.authservice.services.UserService;
+import com.retr0lbb.housekeeper.entitys.UserEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +22,9 @@ public class UserController {
 
     @Transactional
     @PostMapping("/register")
-    public ResponseEntity<UserModel> createUser(@RequestBody CreateUserDTO user){
+    public ResponseEntity<UserEntity> createUser(@RequestBody CreateUserDTO user){
         try{
-            UserModel savedUser = userService.saveUser(user);
+            UserEntity savedUser = userService.saveUser(user);
             return ResponseEntity.ok(savedUser);
 
         } catch (Exception e) {
@@ -32,20 +32,9 @@ public class UserController {
         }
     }
 
-    @Transactional
-    @PutMapping("/promote/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_basic')")
-    public ResponseEntity<String> promoteBasicToAdmin(@PathVariable UUID id, JwtAuthenticationToken token){
-        try{
-            this.userService.promoteUser(id);
-            return ResponseEntity.ok("User saved successfully");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @GetMapping
-    public List<UserModel> getAll(){
+    public List<UserEntity> getAll(){
         return this.userService.getAll();
     }
 }

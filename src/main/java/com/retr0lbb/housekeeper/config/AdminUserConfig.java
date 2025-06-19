@@ -1,13 +1,11 @@
 package com.retr0lbb.housekeeper.config;
 
-import com.retr0lbb.housekeeper.entitys.RolesModel;
-import com.retr0lbb.housekeeper.entitys.UserModel;
+import com.retr0lbb.housekeeper.entitys.UserEntity;
 import com.retr0lbb.housekeeper.repository.RoleRepository;
 import com.retr0lbb.housekeeper.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Role;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Set;
@@ -27,7 +25,7 @@ public class AdminUserConfig implements CommandLineRunner  {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        var adminRole = roleRepository.findByName("admin");
+        var adminRole = roleRepository.findByDescription("admin");
 
         if(adminRole.isEmpty()){
             throw new IllegalArgumentException("cant pass this");
@@ -37,11 +35,11 @@ public class AdminUserConfig implements CommandLineRunner  {
         userAdmin.ifPresentOrElse(
                 user -> {System.out.println("Admin ja existe");},
                 () -> {
-                    var user = new UserModel();
-                    user.setUserName("admin");
+                    var user = new UserEntity();
+                    user.setName("admin");
                     user.setEmail("admin@gmail.com");
                     user.setPassword(bCryptPasswordEncoder.encode("123"));
-                    user.setRoles(Set.of(adminRole.get()));
+                    user.setAccessLevel(adminRole.get());
                     userRepository.save(user);
                 }
         );

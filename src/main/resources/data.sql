@@ -1,4 +1,4 @@
-TRUNCATE TABLE tb_roles CASCADE;
+TRUNCATE TABLE access_level CASCADE;
 
-INSERT INTO tb_roles (role_id, name) VALUES (1, 'admin');
-INSERT INTO tb_roles (role_id, name) VALUES (2, 'basic');
+INSERT INTO access_level (value, description) VALUES (0, 'admin') ON CONFLICT DO NOTHING;
+INSERT INTO access_level (value, description) VALUES (1, 'basic') ON CONFLICT DO NOTHING;

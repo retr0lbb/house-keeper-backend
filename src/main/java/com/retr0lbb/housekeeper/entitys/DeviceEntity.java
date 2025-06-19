@@ -1,61 +1,80 @@
 package com.retr0lbb.housekeeper.entitys;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tb_devices")
+@Table(name = "devices")
 public class DeviceEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "device_id")
-    private UUID deviceID;
+    @GeneratedValue(generator = "UUID")
+    private UUID id;
 
     @Column(unique = true)
-    private Long deviceSerial;
-
-    @Column(name = "added_at")
-    @CreationTimestamp
-    private LocalDateTime addedAt;
-
-    private String name;
+    private String deviceSerial;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", updatable = false) // define a FK para o usuário
-    @JsonBackReference
-    private UserModel user;
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private RoomEntity room;
+
+    @Column(name = "added_at")
+    private LocalDateTime addedAt = LocalDateTime.now();
+
+    @Column(name = "last_change_at")
+    private LocalDateTime lastChangeAt;
+
+    private String status;
+
+    public DeviceEntity(UUID id, String deviceSerial, UserEntity user, RoomEntity room, LocalDateTime addedAt, LocalDateTime lastChangeAt, String status) {
+        this.id = id;
+        this.deviceSerial = deviceSerial;
+        this.user = user;
+        this.room = room;
+        this.addedAt = addedAt;
+        this.lastChangeAt = lastChangeAt;
+        this.status = status;
+    }
 
     public DeviceEntity(){
-
-    }
-
-    public DeviceEntity(UUID deviceID, Long deviceSerial, LocalDateTime addedAt, String name, UserModel user) {
         super();
-        this.deviceID = deviceID;
-        this.deviceSerial = deviceSerial;
-        this.addedAt = addedAt;
-        this.name = name;
-        this.user = user;
     }
 
-    public UUID getDeviceID() {
-        return deviceID;
+    public UUID getId() {
+        return id;
     }
 
-    public void setDeviceID(UUID deviceID) {
-        this.deviceID = deviceID;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
-    public Long getDeviceSerial() {
+    public String getDeviceSerial() {
         return deviceSerial;
     }
 
-    public void setDeviceSerial(Long deviceSerial) {
+    public void setDeviceSerial(String deviceSerial) {
         this.deviceSerial = deviceSerial;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public RoomEntity getRoom() {
+        return room;
+    }
+
+    public void setRoom(RoomEntity room) {
+        this.room = room;
     }
 
     public LocalDateTime getAddedAt() {
@@ -66,19 +85,19 @@ public class DeviceEntity {
         this.addedAt = addedAt;
     }
 
-    public String getName() {
-        return name;
+    public LocalDateTime getLastChangeAt() {
+        return lastChangeAt;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLastChangeAt(LocalDateTime lastChangeAt) {
+        this.lastChangeAt = lastChangeAt;
     }
 
-    public UserModel getUser() {
-        return user;
+    public String getStatus() {
+        return status;
     }
 
-    public void setUser(UserModel user) {
-        this.user = user;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

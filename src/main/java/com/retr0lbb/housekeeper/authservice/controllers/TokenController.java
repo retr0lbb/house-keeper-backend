@@ -2,8 +2,7 @@ package com.retr0lbb.housekeeper.authservice.controllers;
 
 import com.retr0lbb.housekeeper.authservice.dto.LoginRequest;
 import com.retr0lbb.housekeeper.authservice.dto.LoginResponse;
-import com.retr0lbb.housekeeper.entitys.RolesModel;
-import com.retr0lbb.housekeeper.entitys.UserModel;
+import com.retr0lbb.housekeeper.entitys.UserEntity;
 import com.retr0lbb.housekeeper.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +34,7 @@ public class TokenController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
-        Optional<UserModel> user = this.userRepository.findByEmail(loginRequest.userName());
+        Optional<UserEntity> user = this.userRepository.findByEmail(loginRequest.userName());
 
         if(user.isEmpty() ||  !user.get().isLoginCorrect(loginRequest, bCryptPasswordEncoder)){
             throw new BadCredentialsException("User or password invalid");
@@ -43,14 +42,14 @@ public class TokenController {
 
         var now = Instant.now();
         var expiresIn = 2 * 60 * 60;
-        var scopes = user.get().getRoles().stream().map(RolesModel::getName).collect(Collectors.joining(" "));
-        System.out.println("Esse eh o seu token seu bozo "+ scopes);
+        var scope = user.get().getAccessLevel().getDescription();
+        System.out.println("Esse eh o seu token seu bozo "+ scope);
 
         var claims = JwtClaimsSet.builder()
                 .issuer("House Keeper Backend 2025")
-                .subject(user.get().getUserId().toString())
+                .subject(user.get().getId().toString())
                 .expiresAt(now.plusSeconds(expiresIn))
-                .claim("scope", scopes)
+                .claim("scope", scope)
                 .issuedAt(now)
                 .build();
 
