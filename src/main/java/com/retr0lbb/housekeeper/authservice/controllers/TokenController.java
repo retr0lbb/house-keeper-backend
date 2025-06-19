@@ -2,7 +2,9 @@ package com.retr0lbb.housekeeper.authservice.controllers;
 
 import com.retr0lbb.housekeeper.authservice.dto.LoginRequest;
 import com.retr0lbb.housekeeper.authservice.dto.LoginResponse;
+import com.retr0lbb.housekeeper.entitys.SessionEntity;
 import com.retr0lbb.housekeeper.entitys.UserEntity;
+import com.retr0lbb.housekeeper.repository.SessionRepository;
 import com.retr0lbb.housekeeper.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,9 @@ public class TokenController {
     private final JwtEncoder jwtEncoder;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SessionRepository sessionRepository;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -55,6 +61,11 @@ public class TokenController {
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
+        SessionEntity session = new SessionEntity();
+        session.setUser(user.get());
+        session.setIsValid(Boolean.TRUE);
+        session.setExpiresIn(LocalDateTime.now().plusDays(60));
+        sessionRepository.save(session);
 
 
         return ResponseEntity.ok(new LoginResponse(jwtValue, expiresIn));
