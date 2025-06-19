@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -127,4 +129,36 @@ public class TokenController {
         return ResponseEntity.ok(new LoginResponse(jwtValue, refreshTokenValue, expiresIn));
 
     }
+
+    @PostMapping("/loggout")
+    public ResponseEntity<Void> loggout(JwtAuthenticationToken token){
+        UUID userId = UUID.fromString(token.getName());
+
+        var user = userRepository.findById(userId);
+
+        if(user.isEmpty()){
+            return ResponseEntity.status(404).build();
+        }
+
+
+        List<SessionEntity> validSessions = sessionRepository.findAllByUserIdAndIsValidTrue(user.get().getId());
+
+        if(validSessions.isEmpty()){
+            System.out.println("Nenhuma sessao encontrada ok");
+            return ResponseEntity.ok().build();
+        }
+
+        for (SessionEntity session : validSessions) {
+            session.setIsValid(false);
+        }
+
+        sessionRepository.saveAll(validSessions);
+
+
+        System.out.println("Logout concluído, todas as sessões foram invalidadas.");
+
+        return ResponseEntity.ok().build();
+
+    }
+
 }

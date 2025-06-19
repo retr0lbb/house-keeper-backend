@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -43,6 +40,26 @@ public class UserService {
         newUser.setAccessLevel(accessLevel.get());
 
         return userRepository.save(newUser);
+    }
+
+    public UserEntity upgradeUser(UUID targetUserId) throws Exception {
+        Optional<UserEntity> user = userRepository.findById(targetUserId);
+
+        if(user.isEmpty()){
+            throw new Exception("Cannot found user");
+        }
+
+        var adminAccessLevel = roleRepository.findByDescription("admin");
+
+        if(adminAccessLevel.isEmpty()){
+            System.out.println("Nao achei o nivel de acesso");
+            throw new Exception("Cant find adm role");
+        }
+
+        user.get().setAccessLevel(adminAccessLevel.get());
+
+        return userRepository.save(user.get());
+
     }
 
 
