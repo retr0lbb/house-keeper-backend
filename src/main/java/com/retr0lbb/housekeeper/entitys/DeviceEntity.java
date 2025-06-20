@@ -12,6 +12,9 @@ public class DeviceEntity {
     @GeneratedValue(generator = "UUID")
     private UUID id;
 
+    @Column (unique = true, name = "device_slug")
+    private String deviceSlug;
+
     @Column(unique = true)
     private String deviceSerial;
 
@@ -19,7 +22,7 @@ public class DeviceEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "room_id")
     private RoomEntity room;
 
@@ -31,7 +34,7 @@ public class DeviceEntity {
 
     private String status;
 
-    public DeviceEntity(UUID id, String deviceSerial, UserEntity user, RoomEntity room, LocalDateTime addedAt, LocalDateTime lastChangeAt, String status) {
+    public DeviceEntity(UUID id, String deviceSerial, UserEntity user, RoomEntity room, LocalDateTime addedAt, LocalDateTime lastChangeAt, String status, String deviceSlug) {
         this.id = id;
         this.deviceSerial = deviceSerial;
         this.user = user;
@@ -39,6 +42,7 @@ public class DeviceEntity {
         this.addedAt = addedAt;
         this.lastChangeAt = lastChangeAt;
         this.status = status;
+        this.deviceSlug = deviceSlug;
     }
 
     public DeviceEntity(){
@@ -99,5 +103,13 @@ public class DeviceEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDeviceSlug() {
+        return deviceSlug;
+    }
+
+    public void setDeviceSlug(String deviceSlug) {
+        this.deviceSlug = deviceSlug;
     }
 }

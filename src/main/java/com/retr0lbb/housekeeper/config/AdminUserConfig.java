@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Configuration
 public class AdminUserConfig implements CommandLineRunner  {
@@ -37,6 +38,7 @@ public class AdminUserConfig implements CommandLineRunner  {
                 () -> {
                     var user = new UserEntity();
                     user.setName("admin");
+                    //user.setId(UUID.fromString("85fce15a-9d26-4f96-a78a-a9fab4093a9e"));
                     user.setEmail("admin@gmail.com");
                     user.setPassword(bCryptPasswordEncoder.encode("123"));
                     user.setAccessLevel(adminRole.get());
