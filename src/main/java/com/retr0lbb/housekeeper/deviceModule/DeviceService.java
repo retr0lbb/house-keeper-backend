@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class DeviceService {
@@ -117,5 +118,25 @@ public class DeviceService {
         } else {
             return deviceRepository.findAll(pageable);
         }
+    }
+
+    public void deleteDevice(UUID deviceId, UUID userId) throws Exception {
+        var device = deviceRepository.findById(deviceId);
+
+        if(device.isEmpty()){
+            return;
+        }
+
+        var requestUserOpt = userRepository.findById(userId);
+        var deviceUser = device.get().getUser();
+
+        if(requestUserOpt.isEmpty()){
+            throw new Exception("Cant find user by token");
+        }
+        if(!requestUserOpt.get().getId().equals(deviceUser.getId()) && !requestUserOpt.get().getAccessLevel().getDescription().equals("admin")){
+            throw new Exception("This device is not yours to delete");
+        }
+
+        deviceRepository.deleteById(deviceId);
     }
 }

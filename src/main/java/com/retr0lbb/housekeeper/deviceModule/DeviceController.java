@@ -1,5 +1,6 @@
 package com.retr0lbb.housekeeper.deviceModule;
 
+import com.retr0lbb.housekeeper.authservice.controllers.TokenController;
 import com.retr0lbb.housekeeper.authservice.dto.CreateUserDTO;
 import com.retr0lbb.housekeeper.deviceModule.dto.CreateDeviceDTO;
 import com.retr0lbb.housekeeper.deviceModule.dto.UpdateDeviceDTO;
@@ -67,6 +68,18 @@ public class DeviceController {
 
             Page<DeviceEntity> devices = deviceService.readAllDevices(page, size, userId, query, order);
             return ResponseEntity.ok(devices);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @DeleteMapping("/{deviceId}")
+    public ResponseEntity deleteDevice(@PathVariable(name = "deviceId") UUID deviceId, JwtAuthenticationToken token){
+        UUID userId = UUID.fromString(token.getName());
+        try{
+            deviceService.deleteDevice(deviceId, userId);
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
