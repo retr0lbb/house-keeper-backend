@@ -42,7 +42,7 @@ e crie 2 arquivos, um chamado app.key e outro chamado app.pub para a geracao des
 
 ### app.key
 ```
------BEGIN RSA PRIVATE KEY-----
+-----BEGIN PRIVATE KEY-----
 MIICXgIBAAKBgQC8ifwuzX9pAt0Yup/nPbIeNJn1Nddwxgi/ailzJqrce+9Daa0q
 j3gLIXsNbqw04YaRZz/z1utrz291d8KRAZniNir495+EJrcUYb9lj2Gzn5HzdoMq
 OQs93SY4bNk+9KLgRmJoM6x2dl8L+5QoRhhzuORIadf43stDocVu0PDT3wIDAQAB
@@ -56,7 +56,7 @@ Gy/jpsTU9s5vwVniyJ25r2hrHp9pS+7pM4sTtD497RPfJGfzE/1E+xLrQd03AkEA
 sycnNqjHSxf+ufYnU5enwlpB8eVfjAs2tH7q45LekjjEOioPlhgnzaniDs9w32ih
 QbbihwbiR/3Y010eOLMpcQJAPZvzILWJFaa4lmqOmyPWOtf0Z1L3zOmbRAvfZWgi
 yvNTES/5znGdU9PtCmxbHGUODoTEDkIcpMc5Eoh6fJnxow==
------END RSA PRIVATE KEY-----
+-----END PRIVATE KEY-----
 ```
 
 ### app.pub
