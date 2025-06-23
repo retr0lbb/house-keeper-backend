@@ -100,4 +100,131 @@ mvn spring-boot:run
 
 
 
+# 📑 House Keeper API - Endpoints
 
+Esta é a documentação rápida da API do projeto **House Keeper**, contendo os principais endpoints de autenticação, usuários e dispositivos.
+
+---
+
+## 🛡️ Auth Endpoints
+
+### `POST /login`
+- **Descrição:** Faz login com e-mail e senha.
+- **Body:**
+```json
+{
+  "userName": "email@example.com",
+  "password": "senha123"
+}
+```
+- **Response:** JWT + Refresh Token
+- **Status:** `200 OK`
+
+---
+
+### `GET /refresh`
+- **Descrição:** Gera um novo token JWT com base no refresh token (cookie `HK_refresh_token`).
+- **Response:** Novo JWT
+- **Status:** `200 OK`
+- **Observação:** Requer o cookie de refresh válido.
+
+---
+
+### `POST /loggout`
+- **Descrição:** Faz logout do usuário, invalidando todas as sessões ativas.
+- **Auth:** JWT obrigatório (Bearer Token)
+- **Status:** `200 OK`
+
+---
+
+## 👤 User Endpoints
+
+### `POST /users/register`
+- **Descrição:** Cria um novo usuário.
+- **Body:**
+```json
+{
+  "email": "email@example.com",
+  "password": "senha123",
+  "name": "Nome do Usuário"
+}
+```
+- **Response:** Dados do usuário criado
+- **Status:** `200 OK`
+
+---
+
+### `PATCH /users/upgrade/{id}`
+- **Descrição:** Promove um usuário para o nível de admin.
+- **Auth:** JWT com escopo `admin`
+- **Response:** Usuário atualizado
+- **Status:** `200 OK`
+
+---
+
+### `GET /users`
+- **Descrição:** Lista todos os usuários.
+- **Auth:** JWT com escopo `admin`
+- **Response:** Lista de usuários
+- **Status:** `200 OK`
+
+---
+
+## 📱 Device Endpoints
+
+### `POST /devices`
+- **Descrição:** Cria um novo dispositivo.
+- **Auth:** JWT obrigatório
+- **Body:**
+```json
+{
+  "name": "Lampada Quarto",
+  "description": "Lâmpada inteligente",
+  "type": "light"
+}
+```
+- **Response:** Dispositivo criado
+- **Status:** `200 OK`
+
+---
+
+### `PUT /devices/{deviceId}`
+- **Descrição:** Atualiza um dispositivo existente.
+- **Auth:** JWT obrigatório
+- **Body:**
+```json
+{
+  "name": "Lampada Sala",
+  "description": "Nova descrição"
+}
+```
+- **Status:** `200 OK`
+
+---
+
+### `GET /devices/all`
+- **Descrição:** Lista todos os dispositivos com paginação e filtros opcionais.
+- **Auth:** JWT obrigatório
+- **Query Params:**
+    - `page` (int, default: 0)
+    - `size` (int, default: 10)
+    - `userId` (UUID, opcional)
+    - `query` (String, opcional)
+    - `order` (`asc` ou `desc`, default: asc)
+- **Response:** Página de dispositivos
+- **Status:** `200 OK`
+
+---
+
+### `DELETE /devices/{deviceId}`
+- **Descrição:** Deleta um dispositivo pelo ID.
+- **Auth:** JWT obrigatório
+- **Status:** `200 OK`
+
+---
+
+## ✅ Extras
+
+- **Versão da API:** 1.0
+- **Tecnologias usadas:** Spring Boot, Spring Security, JWT, JPA/Hibernate, H2/PostgreSQL
+- **Status do Projeto:** Em desenvolvimento 🚧
